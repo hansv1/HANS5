@@ -1406,3 +1406,330 @@ body.correo-temporal-page {
     }
 }
 
+
+/* ============================================ */
+/* ESTILOS ESPECÍFICOS PARA GESTIÓN DE CÓDIGOS */
+/* ============================================ */
+
+/* Service Selection */
+.service-selection {
+    margin-bottom: 40px;
+}
+
+.selection-header {
+    text-align: center;
+    margin-bottom: 40px;
+    color: var(--white);
+}
+
+.selection-header h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.streaming-services {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.streaming-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 25px;
+    box-shadow: var(--shadow-lg);
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: justify;
+}
+
+.streaming-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--primary-color);
+    box-shadow: var(--shadow-lg);
+}
+
+.streaming-card[data-service="netflix"]:hover {
+    border-color: #e50914;
+}
+
+.streaming-card[data-service="disney"]:hover {
+    border-color: #113ccf;
+}
+
+.streaming-card[data-service="amazon"]:hover {
+    border-color: #ff9900;
+}
+
+.streaming-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.streaming-icon.netflix {
+    background: #e50914;
+}
+
+.streaming-icon.disney {
+    background: #113ccf;
+}
+
+.streaming-icon.amazon {
+    background: #ff9900;
+}
+
+.streaming-content h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+.streaming-content p {
+    color: var(--gray-600);
+    line-height: 1.5;
+    margin-bottom: 12px;
+}
+
+.service-instruction {
+    background: var(--gray-50);
+    padding: 12px;
+    border-radius: var(--radius);
+    font-size: 0.85rem;
+    color: var(--gray-600);
+    border-left: 3px solid var(--primary-color);
+}
+
+/* Email Input Section */
+.email-input-section {
+    margin-bottom: 40px;
+}
+
+.input-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    box-shadow: var(--shadow-lg);
+    max-width: 0 auto;
+    margin: 0 auto;
+}
+
+.input-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--gray-200);
+}
+
+.back-service-btn {
+    background: var(--gray-100);
+    border: 1px solid var(--gray-300);
+    color: var(--gray-600);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex-shrink: 0;
+}
+
+.back-service-btn:hover {
+    background: var(--gray-200);
+    transform: translateX(-3px);
+}
+
+.selected-service-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.service-icon-small {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-size: 1.2rem;
+}
+
+.service-icon-small.netflix {
+    background: #e50914;
+}
+
+.service-icon-small.disney {
+    background: #113ccf;
+}
+
+.service-icon-small.amazon {
+    background: #ff9900;
+}
+
+.selected-service-info h3 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.selected-service-info p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--gray-600);
+}
+
+/* Messages Section */
+.messages-section {
+    margin-bottom: 0px;
+}
+
+.messages-card {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 30px;
+    box-shadow: var(--shadow-lg);
+}
+
+.messages-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.messages-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.messages-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.messages-subtitle {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+    margin: 0;
+}
+
+.messages-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* Estilos para la cabecera de plataforma seleccionada - ESPACIADO REDUCIDO */
+.selected-platform-header {
+    margin-bottom: 5px; /* Reducido considerablemente */
+    padding-bottom: 5px; /* Reducido considerablemente */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.platform-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.platform-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+/* Asegurar que los iconos de plataforma mantengan su estilo */
+.selected-platform-header .service-icon-small {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    font-size: 1.2rem;
+}
+
+.selected-platform-header .service-icon-small.netflix {
+    background: #e50914;
+}
+
+.selected-platform-header .service-icon-small.disney {
+    background: #113ccf;
+}
+
+.selected-platform-header .service-icon-small.amazon {
+    background: #ff9900;
+}
+
+/* Responsive Design para gestión de códigos */
+@media (max-width: 1024px) {
+    .streaming-services {
+        grid-template-columns: 1fr;
+    }
+    
+    .input-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+    
+    .messages-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .header-left {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .streaming-card,
+    .input-card,
+    .messages-card {
+        padding: 20px;
+    }
+    
+    .selection-header h2 {
+        font-size: 1.5rem;
+    }
+}
+
