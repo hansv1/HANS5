@@ -1,53 +1,400 @@
-// Sistema de Correo Temporal CORREGIDO - Versión Final
-class TempMailManager {
+/**
+ * TempMail Pro - Correos Temporales para HANS WEB
+ * Integrado desde hansv1/web repository
+ * Adaptado para mantener diseño HANS5
+ */
+
+class TempMailApp {
     constructor() {
-        this.config = {
-            API_KEY: 'e769cbfe-db59-4af7-97d3-74703239d385',
-            NAMESPACE: 'wjlcs',
-            BASE_URL: 'https://api.testmail.app/api/json',
-            EMAIL_FORMAT: '{namespace}.{tag}@inbox.testmail.app'
-        };
-        
+        // Forzar restauración manual del scroll al recargar
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+
+        this.API_KEY = 'e769cbfe-db59-4af7-97d3-74703239d385';
+        this.NAMESPACE = 'wjlcs';
+        this.BASE_URL = 'https://api.testmail.app/api/json';
+
         this.currentTag = null;
         this.currentEmail = null;
         this.refreshInterval = null;
-        this.refreshTime = 10000;
         this.emails = [];
-        
-        this.init();
+
+        this.elements = {
+            tagInput: document.getElementById('tagInput'),
+            generateBtn: document.getElementById('generateBtn'),
+            randomBtn: document.getElementById('randomBtn'),
+            tagError: document.getElementById('tagError'),
+            emailSection: document.getElementById('emailSection'),
+            generatedEmail: document.getElementById('generatedEmail'),
+            copyBtn: document.getElementById('copyBtn'),
+            refreshBtn: document.getElementById('refreshBtn'),
+            refreshInterval: document.getElementById('refreshInterval'),
+            newBtn: document.getElementById('newBtn'),
+            deleteBtn: document.getElementById('deleteBtn'),
+            statusDot: document.getElementById('statusDot'),
+            statusText: document.getElementById('statusText'),
+            inboxSection: document.getElementById('inboxSection'),
+            emailList: document.getElementById('emailList'),
+            emailModal: document.getElementById('emailModal'),
+            closeModal: document.getElementById('closeModal'),
+            loadingOverlay: document.getElementById('loadingOverlay'),
+            toastContainer: document.getElementById('toastContainer')
+        };
+
+        this.initializeEventListeners();
+        this.reset();
     }
 
-    init() {
-        console.log('Inicializando TempMail Manager...');
-        
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                this.bindEvents();
-            });
+    initializeEventListeners() {
+        this.elements.generateBtn.addEventListener('click', () => this.generateEmail());
+        this.elements.tagInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.generateEmail();
+        });
+        this.elements.tagInput.addEventListener('input', () => this.validateTag());
+        this.elements.copyBtn.addEventListener('click', () => this.copyEmail());
+        this.elements.refreshBtn.addEventListener('click', () => this.fetchEmails());
+        this.elements.refreshInterval.addEventListener('change', () => this.updateRefreshInterval());
+        this.elements.randomBtn.addEventListener('click', () => this.generateRandomAlias());
+        this.elements.newBtn.addEventListener('click', () => this.reset());
+        this.elements.deleteBtn.addEventListener('click', () => this.reset());
+        this.elements.closeModal.addEventListener('click', () => this.closeModal());
+        this.elements.emailModal.addEventListener('click', (e) => {
+            if (e.target === this.elements.emailModal) this.closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') this.closeModal();
+        });
+    }
+
+    validateTag() {
+        const tag = this.elements.tagInput.value.trim();
+        const regex = /^[a-zA-Z0-9._-]+$/;
+        this.clearError();
+        if (!tag) return false;
+        if (tag.length > 30) {
+            this.showError('El alias no puede exceder 30 caracteres');
+            return false;
+        }
+        if (!regex.test(tag)) {
+            this.showError('Solo se permiten letras, números, puntos, guiones y guiones bajos');
+            return false;
+        }
+        if (tag.startsWith('.') || tag.endsWith('.') || tag.includes('..')) {
+            this.showError('Los puntos no pueden estar al inicio, final o ser consecutivos');
+            return false;
+        }
+        return true;
+    }
+
+    generateRandomAlias() {
+        const chars = 'abcdefghijklmnopqrstuvwxyz';
+        let alias = '';
+        for (let i = 0; i < 5; i++) {
+            alias += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        this.elements.tagInput.value = alias;
+        this.generateEmail();
+    }
+
+    async generateEmail() {
+        const tag = this.elements.tagInput.value.trim();
+        if (!this.validateTag()) {
+            this.elements.tagInput.focus();
+            return;
+        }
+        this.showLoading(true);
+        try {
+            this.currentTag = tag;
+            this.currentEmail = `${this.NAMESPACE}.${tag}@inbox.testmail.app`;
+            this.elements.generatedEmail.textContent = this.currentEmail;
+            this.elements.emailSection.classList.remove('hidden');
+            this.elements.inboxSection.classList.remove('hidden');
+            this.emails = [];
+            this.renderEmails();
+            this.startRefreshInterval();
+            await this.fetchEmails();
+            this.showToast('¡Email temporal generado exitosamente!', 'success');
+
+            // Scroll automático en todos los dispositivos
+            setTimeout(() => {
+                const emailSection = this.elements.emailSection;
+                if (typeof emailSection.scrollIntoView === "function") {
+                    emailSection.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+                const rect = emailSection.getBoundingClientRect();
+                window.scrollTo({
+                    top: window.scrollY + rect.top - 24,
+                    behavior: "smooth"
+                });
+            }, 150);
+
+        } catch (error) {
+            this.showToast('Error al generar el email temporal', 'error');
+        } finally {
+            this.showLoading(false);
+        }
+    }
+
+    async copyEmail() {
+        if (!this.currentEmail) return;
+        try {
+            await navigator.clipboard.writeText(this.currentEmail);
+            this.showToast('Email copiado al portapapeles', 'success');
+            this.elements.copyBtn.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.elements.copyBtn.style.transform = '';
+            }, 150);
+        } catch (error) {
+            this.showToast('Error al copiar el email', 'error');
+            this.fallbackCopyEmail();
+        }
+    }
+
+    fallbackCopyEmail() {
+        const textArea = document.createElement('textarea');
+        textArea.value = this.currentEmail;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            this.showToast('Email copiado al portapapeles', 'success');
+        } catch (error) {
+            this.showToast('No se pudo copiar el email', 'error');
+        }
+        document.body.removeChild(textArea);
+    }
+
+    async fetchEmails() {
+        if (!this.currentTag) return;
+        try {
+            this.updateStatus('Buscando correos...', false);
+            const response = await fetch(
+              `https://api.testmail.app/api/json?apikey=${this.API_KEY}&namespace=${this.NAMESPACE}&tag=${this.currentTag}`
+            );
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            const data = await response.json();
+            this.emails = data.emails || [];
+            this.renderEmails();
+            if (this.emails.length) {
+                this.updateStatus(`Activo - ${this.emails.length} correo(s) recibido(s)`, true);
+            } else {
+                this.updateStatus('Activo - Esperando correos...', true);
+            }
+        } catch (error) {
+            this.updateStatus('Error al conectar con el servidor', false);
+            this.showToast('Error al buscar correos', 'error');
+        }
+    }
+
+    renderEmails() {
+        if (this.emails.length === 0) {
+            this.elements.emailList.innerHTML = `
+                <div class="no-emails">
+                    <i class="fas fa-inbox"></i>
+                    <p>No hay correos recibidos aún</p>
+                    <small>Los nuevos mensajes aparecerán aquí automáticamente</small>
+                </div>
+            `;
+            return;
+        }
+        this.elements.emailList.innerHTML = this.emails.map(email => `
+            <div class="email-item" onclick="tempMailApp.openEmailModal('${email.id}')">
+                <div class="email-header">
+                    <div class="email-subject">${this.escapeHtml(email.subject || 'Sin asunto')}</div>
+                    <div class="email-date">${this.formatDate(email.timestamp)}</div>
+                </div>
+                <div class="email-from">De: ${this.escapeHtml(email.from || 'Desconocido')}</div>
+                <div class="email-preview">${this.getEmailPreview(email)}</div>
+            </div>
+        `).join('');
+    }
+
+    openEmailModal(emailId) {
+        const email = this.emails.find(e => e.id === emailId);
+        if (!email) return;
+        document.getElementById('modalSubject').textContent = email.subject || 'Sin asunto';
+        document.getElementById('modalFrom').textContent = email.from || 'Desconocido';
+        document.getElementById('modalTo').textContent = email.to || this.currentEmail;
+        document.getElementById('modalDate').textContent = this.formatDate(email.timestamp, true);
+        const contentDiv = document.getElementById('modalContent');
+        if (email.html) {
+            const iframe = document.createElement('iframe');
+            iframe.srcdoc = email.html;
+            iframe.style.width = '100%';
+            iframe.style.minHeight = '400px';
+            iframe.style.border = '1px solid var(--gray-200)';
+            iframe.style.borderRadius = 'var(--radius)';
+            contentDiv.innerHTML = '';
+            contentDiv.appendChild(iframe);
+        } else if (email.text) {
+            contentDiv.innerHTML = `<pre style="white-space: pre-wrap; font-family: inherit;">${this.escapeHtml(email.text)}</pre>`;
         } else {
-            this.bindEvents();
+            contentDiv.innerHTML = '<p style="color: var(--gray-500); font-style: italic;">Este email no tiene contenido.</p>';
+        }
+        this.elements.emailModal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden';
+    }
+
+    closeModal() {
+        this.elements.emailModal.classList.add('hidden');
+        document.body.style.overflow = '';
+    }
+
+    updateRefreshInterval() {
+        const interval = parseInt(this.elements.refreshInterval.value);
+        if (this.refreshInterval) clearInterval(this.refreshInterval);
+        if (this.currentTag) {
+            this.refreshInterval = setInterval(() => this.fetchEmails(), interval);
         }
     }
 
-    bindEvents() {
-        console.log('Vinculando eventos de correo temporal...');
-        
-        const generateBtn = document.getElementById('generateBtn');
-        const randomBtn = document.getElementById('randomBtn');
-        const copyBtn = document.getElementById('copyBtn');
-        const newBtn = document.getElementById('newBtn');
-        const deleteBtn = document.getElementById('deleteBtn');
-        const refreshBtn = document.getElementById('refreshBtn');
-        const closeModal = document.getElementById('closeModal');
-        const refreshInterval = document.getElementById('refreshInterval');
+    startRefreshInterval() {
+        if (this.refreshInterval) clearInterval(this.refreshInterval);
+        const interval = parseInt(this.elements.refreshInterval.value);
+        this.refreshInterval = setInterval(() => this.fetchEmails(), interval);
+    }
 
-        if (generateBtn) {
-            generateBtn.addEventListener('click', () => this.generateEmail());
+    updateStatus(text, isActive) {
+        this.elements.statusText.textContent = text;
+        if (isActive) {
+            this.elements.statusDot.classList.add('active');
+        } else {
+            this.elements.statusDot.classList.remove('active');
         }
+    }
 
-        if (randomBtn) {
-            randomBtn.addEventListener('click', () => this.generateRandomAlias());
+    showLoading(show) {
+        if (show) {
+            this.elements.loadingOverlay.classList.remove('hidden');
+        } else {
+            this.elements.loadingOverlay.classList.add('hidden');
         }
+    }
+
+    showError(message) {
+        this.elements.tagError.textContent = message;
+        this.elements.tagInput.style.borderColor = 'var(--danger-color)';
+    }
+
+    clearError() {
+        this.elements.tagError.textContent = '';
+        this.elements.tagInput.style.borderColor = '';
+    }
+
+    showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        const icon = type === 'success' ? 'fas fa-check-circle' : 
+                     type === 'error' ? 'fas fa-exclamation-circle' : 
+                     'fas fa-info-circle';
+        toast.innerHTML = `
+            <i class="${icon}"></i>
+            <span>${message}</span>
+        `;
+        this.elements.toastContainer.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(100%)';
+            setTimeout(() => {
+                if (toast.parentNode) toast.parentNode.removeChild(toast);
+            }, 300);
+        }, 4000);
+    }
+
+    getEmailPreview(email) {
+        let preview = '';
+        if (email.text) {
+            preview = email.text.replace(/\s+/g, ' ').trim();
+        } else if (email.html) {
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = email.html;
+            preview = tempDiv.textContent || tempDiv.innerText || '';
+            preview = preview.replace(/\s+/g, ' ').trim();
+        }
+        if (preview.length > 120) {
+            preview = preview.substring(0, 120) + '...';
+        }
+        return this.escapeHtml(preview) || '<em>Sin contenido de vista previa</em>';
+    }
+
+    formatDate(timestamp, detailed = false) {
+        if (!timestamp) return 'Fecha desconocida';
+        const date = new Date(timestamp * 1000);
+        const now = new Date();
+        const diffMs = now - date;
+        const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+        if (detailed) {
+            return date.toLocaleString('es-ES', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+        if (diffDays === 0) {
+            return date.toLocaleTimeString('es-ES', { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+        } else if (diffDays === 1) {
+            return 'Ayer';
+        } else if (diffDays < 7) {
+            return `Hace ${diffDays} días`;
+        } else {
+            return date.toLocaleDateString('es-ES', {
+                day: 'numeric',
+                month: 'short'
+            });
+        }
+    }
+
+    escapeHtml(text) {
+        if (!text) return '';
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+    }
+
+    reset() {
+        if (this.refreshInterval) {
+            clearInterval(this.refreshInterval);
+            this.refreshInterval = null;
+        }
+        this.currentTag = null;
+        this.currentEmail = null;
+        this.emails = [];
+        this.elements.tagInput.value = '';
+        this.elements.emailSection.classList.add('hidden');
+        this.elements.inboxSection.classList.add('hidden');
+        this.closeModal();
+        this.clearError();
+        // Forzar scroll instantáneo arriba, nunca smooth
+        window.scrollTo({ top: 0, behavior: "auto" });
+    }
+}
+
+let tempMailApp;
+document.addEventListener('DOMContentLoaded', () => {
+    tempMailApp = new TempMailApp();
+    window.tempMailApp = tempMailApp;
+    tempMailApp.reset();
+});
+window.addEventListener('beforeunload', () => {
+    if (tempMailApp && tempMailApp.refreshInterval) {
+        clearInterval(tempMailApp.refreshInterval);
+    }
+});
 
         if (copyBtn) {
             copyBtn.addEventListener('click', () => this.copyEmailToClipboard());
