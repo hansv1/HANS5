@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows y Office - Tienda Digital - HANS WEB</title>
+    <meta name="description" content="Licencias originales de Windows y Microsoft Office con activación global y soporte 24/7">
+    <meta name="keywords" content="Windows 11, Office 2021, licencias originales, Microsoft, activación global">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/tienda.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header con carrito -->
+    <header class="global-header">
+        <div class="header-container">
+            <div class="header-brand">
+                <a href="../index.html" class="brand-link">
+                    <h1 class="brand-logo">
+                        <i class="fas fa-globe"></i>
+                        HANS WEB
+                    </h1>
+                </a>
+            </div>
+            
+            <!-- Navegación Desktop -->
+            <nav class="main-nav desktop-nav">
+                <div class="nav-item dropdown">
+                    <a href="../tienda.html" class="nav-link active">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Tienda</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="windowsoffice.html" class="active">Windows y Office</a>
+                        <a href="programas.html">Programas</a>
+                        <a href="streaming.html">Streaming</a>
+                    </div>
+                </div>
+                <a href="../gestion-codigos.html" class="nav-link">
+                    <i class="fas fa-key"></i>
+                    <span>Gestión de Códigos</span>
+                </a>
+                <a href="../correo-temporal.html" class="nav-link">
+                    <i class="fas fa-envelope"></i>
+                    <span>Correo Temporal</span>
+                </a>
+            </nav>
+
+            <!-- Header Actions con carrito -->
+            <div class="header-actions">
+                <a href="../index.html" class="btn-home">
+                    <i class="fas fa-home"></i>
+                    <span>Inicio</span>
+                </a>
+                
+                <!-- Botón del carrito -->
+                <button class="cart-btn" id="cartBtn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+                
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menú móvil lateral -->
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div class="sidebar-header">
+            <h3>HANS WEB</h3>
+            <button class="sidebar-close" id="sidebarClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="../tienda.html" class="sidebar-link active">
+                <i class="fas fa-shopping-cart"></i>
+                Tienda
+            </a>
+            <div class="sidebar-submenu">
+                <a href="windowsoffice.html" class="active">Windows y Office</a>
+                <a href="programas.html">Programas</a>
+                <a href="streaming.html">Streaming</a>
+            </div>
+            <a href="../gestion-codigos.html" class="sidebar-link">
+                <i class="fas fa-key"></i>
+                Gestión de Códigos
+            </a>
+            <a href="../correo-temporal.html" class="sidebar-link">
+                <i class="fas fa-envelope"></i>
+                Correo Temporal
+            </a>
+        </nav>
+    </div>
+
+    <!-- Carrito lateral -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>
+                <i class="fas fa-shopping-cart"></i>
+                Carro de la Compra
+            </h3>
+            <button class="cart-close" id="cartClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="cart-content" id="cartContent">
+            <div class="cart-empty">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Tu carrito está vacío</p>
+                <small>Añade productos para comenzar tu compra</small>
+            </div>
+        </div>
+        
+        <div class="cart-footer" id="cartFooter">
+            <div class="cart-totals">
+                <div class="cart-subtotal">
+                    <span>Subtotal:</span>
+                    <span id="cartSubtotal">S/ 0.00</span>
+                </div>
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span id="cartTotal">S/ 0.00</span>
+                </div>
+            </div>
+            <button class="btn-checkout" id="checkoutBtn">
+                <i class="fab fa-whatsapp"></i>
+                Finalizar Compra
+            </button>
+        </div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <main class="main-content">
+        <!-- Breadcrumbs -->
+        <div class="breadcrumbs">
+            <div class="container">
+                <a href="../index.html">Inicio</a>
+                <span>/</span>
+                <a href="../tienda.html">Tienda</a>
+                <span>/</span>
+                <span>Windows y Office</span>
+            </div>
+        </div>
+
+        <!-- Cabecera de categoría -->
+        <section class="products-section">
+            <div class="container">
+                <div class="products-header">
+                    <div class="products-title">
+                        <h1>Windows y Office</h1>
+                        <p>Licencias originales de Windows y Microsoft Office con activación global</p>
+                    </div>
+                    <div class="products-controls">
+                        <select id="sortSelect" class="sort-select">
+                            <option value="default">Orden predeterminado</option>
+                            <option value="price-low">Precio: de bajo a alto</option>
+                            <option value="price-high">Precio: de alto a bajo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Grid de productos -->
+                <div class="products-grid" id="productsGrid">
+                    <!-- Windows 11 Pro -->
+                    <div class="product-card" data-product-id="win11-pro-001" data-category="windows-office" data-price="16.00">
+                        <div class="product-image" onclick="openProduct('Windows-Office/windows11pro.html')">
+                            <img src="../img/windows11home.webp" alt="Windows 11 Pro" onerror="this.src='../img/windows11home.webp'">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title" onclick="openProduct('Windows-Office/windows11pro.html')">Windows 11 Pro Retail Key Global</h3>
+                            <div class="product-price">S/ 16.00</div>
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-cart-plus"></i>
+                                Agregar al Carrito
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Windows 11 Home -->
+                    <div class="product-card" data-product-id="win11-home-001" data-category="windows-office" data-price="14.00">
+                        <div class="product-image" onclick="openProduct('Windows-Office/windows11home.html')">
+                            <img src="../img/windows11home.webp" alt="Windows 11 Home" onerror="this.src='../img/placeholder.jpg'">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title" onclick="openProduct('Windows-Office/windows11home.html')">Windows 11 Home Retail Key Global</h3>
+                            <div class="product-price">S/ 14.00</div>
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-cart-plus"></i>
+                                Agregar al Carrito
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Office 2021 Pro -->
+                    <div class="product-card" data-product-id="office21-pro-001" data-category="windows-office" data-price="18.00">
+                        <div class="product-image" onclick="openProduct('Windows-Office/office2021pro.html')">
+                            <img src="../img/windows11home.webp" alt="Office 2021 Professional" onerror="this.src='../img/windows11home.webp'">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title" onclick="openProduct('Windows-Office/office2021pro.html')">Microsoft Office 2021 Professional Plus</h3>
+                            <div class="product-price">S/ 18.00</div>
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-cart-plus"></i>
+                                Agregar al Carrito
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Office 2019 Pro -->
+                    <div class="product-card" data-product-id="office19-pro-001" data-category="windows-office" data-price="15.00">
+                        <div class="product-image" onclick="openProduct('Windows-Office/office2019pro.html')">
+                            <img src="../img/windows11home.webp" alt="Office 2019 Professional" onerror="this.src='../img/windows11home.webp'">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title" onclick="openProduct('Windows-Office/office2019pro.html')">Microsoft Office 2019 Professional Plus</h3>
+                            <div class="product-price">S/ 15.00</div>
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-cart-plus"></i>
+                                Agregar al Carrito
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Windows 10 Pro -->
+                    <div class="product-card" data-product-id="win10-pro-001" data-category="windows-office" data-price="12.00">
+                        <div class="product-image" onclick="openProduct('Windows-Office/windows10pro.html')">
+                            <img src="../img/windows11home.webp" alt="Windows 10 Pro" onerror="this.src='../img/windows11home.webp'">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title" onclick="openProduct('Windows-Office/windows10pro.html')">Windows 10 Pro Retail Key Global</h3>
+                            <div class="product-price">S/ 12.00</div>
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-cart-plus"></i>
+                                Agregar al Carrito
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Office 365 -->
+                    <div class="product-card" data-product-id="office365-001" data-category="windows-office" data-price="20.00">
+                        <div class="product-image" onclick="openProduct('Windows-Office/office365.html')">
+                            <img src="../img/windows11home.webp" alt="Office 365" onerror="this.src='../img/windows11home.webp'">
+                        </div>
+                        <div class="product-info">
+                            <h3 class="product-title" onclick="openProduct('Windows-Office/office365.html')">Microsoft Office 365 Personal (1 año)</h3>
+                            <div class="product-price">S/ 20.00</div>
+                            <button class="add-to-cart-btn">
+                                <i class="fas fa-cart-plus"></i>
+                                Agregar al Carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="global-footer">
+        <div class="footer-container">
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>Servicios</h4>
+                    <a href="../tienda.html">Tienda</a>
+                    <a href="../gestion-codigos.html">Gestión de Códigos</a>
+                    <a href="../correo-temporal.html">Correo Temporal</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Información</h4>
+                    <a href="#guias">Guías</a>
+                    <a href="#contacto">Contacto</a>
+                    <a href="#terminos">Términos y Condiciones</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Síguenos</h4>
+                    <div class="social-links">
+                        <a href="#" class="social-link">
+                            <i class="fab fa-telegram"></i>
+                            Telegram
+                        </a>
+                        <a href="https://wa.me/51965485348" class="social-link">
+                            <i class="fab fa-whatsapp"></i>
+                            WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 HANS WEB - Desarrollado por @romel.jeans</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Overlay para carrito -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+    <script src="../js/global.js"></script>
+    <script src="../js/carrito.js"></script>
+    <script>
+        // Funciones específicas para esta página
+        function openProduct(url) {
+            document.body.style.opacity = '0.8';
+            setTimeout(() => {
+                window.location.href = url;
+            }, 200);
+        }
+
+        // Ordenamiento de productos
+        document.addEventListener('DOMContentLoaded', function() {
+            const sortSelect = document.getElementById('sortSelect');
+            const productsGrid = document.getElementById('productsGrid');
+
+            if (sortSelect) {
+                sortSelect.addEventListener('change', function() {
+                    const sortValue = this.value;
+                    const products = Array.from(productsGrid.children);
+
+                    products.sort((a, b) => {
+                        const priceA = parseFloat(a.dataset.price);
+                        const priceB = parseFloat(b.dataset.price);
+
+                        switch(sortValue) {
+                            case 'price-low':
+                                return priceA - priceB;
+                            case 'price-high':
+                                return priceB - priceA;
+                            default:
+                                return 0;
+                        }
+                    });
+
+                    // Reordenar elementos en el DOM
+                    products.forEach(product => {
+                        productsGrid.appendChild(product);
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+</html>

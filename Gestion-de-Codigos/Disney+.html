@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disney+ - Gestión de Códigos - HANS WEB</title>
+    <meta name="description" content="Gestiona códigos de verificación de Disney+ con HANS WEB">
+    <meta name="keywords" content="Disney+, códigos verificación, streaming, gestión automática">
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/gestion-codigos.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header Global -->
+    <header class="global-header">
+        <div class="header-container">
+            <div class="header-brand">
+                <a href="../index.html" class="brand-link">
+                    <h1 class="brand-logo">
+                        <i class="fas fa-globe"></i>
+                        HANS WEB
+                    </h1>
+                </a>
+            </div>
+            
+            <!-- Navegación Desktop -->
+            <nav class="main-nav desktop-nav">
+                <div class="nav-item dropdown">
+                    <a href="../tienda.html" class="nav-link">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Tienda</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="../Tienda/windowsoffice.html">Windows y Office</a>
+                        <a href="../Tienda/programas.html">Programas</a>
+                        <a href="../Tienda/streaming.html">Streaming</a>
+                    </div>
+                </div>
+                <a href="../gestion-codigos.html" class="nav-link active">
+                    <i class="fas fa-key"></i>
+                    <span>Gestión de Códigos</span>
+                </a>
+                <a href="../correo-temporal.html" class="nav-link">
+                    <i class="fas fa-envelope"></i>
+                    <span>Correo Temporal</span>
+                </a>
+            </nav>
+
+            <!-- Header Actions -->
+            <div class="header-actions">
+                <a href="../index.html" class="btn-home">
+                    <i class="fas fa-home"></i>
+                    <span>Inicio</span>
+                </a>
+                
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menú móvil lateral -->
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div class="sidebar-header">
+            <h3>HANS WEB</h3>
+            <button class="sidebar-close" id="sidebarClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="../tienda.html" class="sidebar-link">
+                <i class="fas fa-shopping-cart"></i>
+                Tienda
+            </a>
+            <div class="sidebar-submenu">
+                <a href="../Tienda/windowsoffice.html">Windows y Office</a>
+                <a href="../Tienda/programas.html">Programas</a>
+                <a href="../Tienda/streaming.html">Streaming</a>
+            </div>
+            <a href="../gestion-codigos.html" class="sidebar-link active">
+                <i class="fas fa-key"></i>
+                Gestión de Códigos
+            </a>
+            <a href="../correo-temporal.html" class="sidebar-link">
+                <i class="fas fa-envelope"></i>
+                Correo Temporal
+            </a>
+        </nav>
+    </div>
+
+    <!-- Contenido Principal -->
+    <main class="main-content">
+        <!-- Breadcrumbs -->
+        <div class="breadcrumbs">
+            <div class="container">
+                <a href="../index.html">Inicio</a>
+                <span>/</span>
+                <a href="../gestion-codigos.html">Gestión de Códigos</a>
+                <span>/</span>
+                <span>Disney+</span>
+            </div>
+        </div>
+
+        <!-- 1. Correo Principal -->
+        <section id="emailInputSection" class="email-input-section">
+            <div class="container">
+                <div class="input-card">
+                    <div class="input-header">
+                        <button class="back-service-btn" onclick="backToServices()">
+                            <i class="fas fa-arrow-left"></i>
+                        </button>
+                        <div class="selected-service-info">
+                            <div class="service-icon-small disney" style="background: linear-gradient(135deg, #113ccf, #0066ff);">
+                                <i class="fas fa-magic"></i>
+                            </div>
+                            <div>
+                                <h3>Disney+</h3>
+                                <p>Gestión de códigos de verificación de Disney+</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="input-form">
+                        <div class="input-group">
+                            <label for="userEmail">1. Correo Principal:</label>
+                            <div class="input-container">
+                                <input 
+                                    type="email" 
+                                    id="userEmail" 
+                                    placeholder="tu-correo@gmail.com" 
+                                    autocomplete="email"
+                                    required
+                                >
+                                <button id="consultBtn" class="btn-primary">
+                                    <i class="fas fa-search"></i>
+                                    Consultar
+                                </button>
+                            </div>
+                            <div class="input-help">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Ingresa el correo principal de tu cuenta de Disney+ para acceder a todos los mensajes de verificación y notificaciones.</span>
+                            </div>
+                            <div id="emailError" class="error-message"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Tu correo principal está activo -->
+        <section id="messagesSection" class="messages-section hidden">
+            <div class="container">
+                <div class="email-card">
+                    <!-- Plataforma seleccionada -->
+                    <div class="selected-platform-header">
+                        <div class="platform-info">
+                            <div class="service-icon-small disney" style="background: linear-gradient(135deg, #113ccf, #0066ff);">
+                                <i class="fas fa-magic"></i>
+                            </div>
+                            <span class="platform-name">Disney+</span>
+                        </div>
+                    </div>
+                    
+                    <h2>2. Tu correo principal está activo</h2>
+                    <div class="email-display">
+                        <div class="email-address">
+                            <i class="fas fa-envelope"></i>
+                            <span id="principalEmailDisplay"></span>
+                        </div>
+                        <button id="copyPrincipalEmailBtn" class="btn-copy" title="Copiar al portapapeles">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                    <div class="email-status">
+                        <div class="status-indicator">
+                            <div id="statusDot" class="status-dot active"></div>
+                            <span id="statusText">Activo - Esperando correos...</span>
+                        </div>
+                        <div class="email-actions">
+                            <button class="change-email-btn" onclick="backToEmailInput()" title="Cambiar correo">
+                                <i class="fas fa-exchange-alt"></i>
+                                Cambiar correo
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Bandeja de Entrada -->
+        <section id="inboxSection" class="inbox-section hidden">
+            <div class="container">
+                <div class="inbox-card">
+                    <div class="inbox-header-compact">
+                        <h3>
+                            <i class="fas fa-inbox"></i>
+                            3. Bandeja de Entrada
+                        </h3>
+                        <div class="inbox-controls">
+                            <button id="refreshMessages" class="btn-secondary">
+                                <i class="fas fa-sync"></i>
+                                Actualizar
+                            </button>
+                            <select id="autoRefresh" class="refresh-select">
+                                <option value="0">Manual</option>
+                                <option value="5000">5 segundos</option>
+                                <option value="10000" selected>10 segundos</option>
+                                <option value="30000">30 segundos</option>
+                                <option value="60000">1 minuto</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="emailList" class="email-list">
+                        <div class="no-emails">
+                            <i class="fas fa-inbox"></i>
+                            <p>No hay correos recibidos aún</p>
+                            <small>Los nuevos mensajes aparecerán aquí automáticamente</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Modal de detalle de email -->
+        <div id="emailModal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header-compact">
+                    <h3 id="modalSubject"></h3>
+                    <button id="closeModal" class="btn-close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="email-meta-compact">
+                        <div class="meta-item">
+                            <strong>De:</strong>
+                            <span id="modalFrom"></span>
+                        </div>
+                        <div class="meta-item">
+                            <strong>Para:</strong>
+                            <span id="modalTo"></span>
+                        </div>
+                        <div class="meta-item">
+                            <strong>Fecha:</strong>
+                            <span id="modalDate"></span>
+                        </div>
+                    </div>
+                    <div class="email-content-focused">
+                        <div id="modalContent"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="global-footer">
+        <div class="footer-container">
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>Servicios</h4>
+                    <a href="../tienda.html">Tienda</a>
+                    <a href="../gestion-codigos.html">Gestión de Códigos</a>
+                    <a href="../correo-temporal.html">Correo Temporal</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Información</h4>
+                    <a href="#guias">Guías</a>
+                    <a href="#contacto">Contacto</a>
+                    <a href="#terminos">Términos y Condiciones</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Síguenos</h4>
+                    <div class="social-links">
+                        <a href="#" class="social-link">
+                            <i class="fab fa-telegram"></i>
+                            Telegram
+                        </a>
+                        <a href="https://wa.me/51965485348" class="social-link">
+                            <i class="fab fa-whatsapp"></i>
+                            WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 HANS WEB - Desarrollado por @romel.jeans</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="loading-spinner">
+            <i class="fas fa-spinner fa-spin"></i>
+            <p>Consultando mensajes...</p>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="../js/global.js"></script>
+    <script src="../js/gestion-codigos.js"></script>
+</body>
+</html>

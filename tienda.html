@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tienda Digital - HANS WEB</title>
+    <meta name="description" content="Licencias originales de software, programas especializados y servicios de streaming en HANS WEB">
+    <meta name="keywords" content="licencias Windows, Office, software, programas, streaming, Netflix, Disney+">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/tienda.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header con carrito -->
+    <header class="global-header">
+        <div class="header-container">
+            <div class="header-brand">
+                <a href="index.html" class="brand-link">
+                    <h1 class="brand-logo">
+                        <i class="fas fa-globe"></i>
+                        HANS WEB
+                    </h1>
+                </a>
+            </div>
+            
+            <!-- Navegación Desktop -->
+            <nav class="main-nav desktop-nav">
+                <div class="nav-item dropdown">
+                    <a href="tienda.html" class="nav-link active">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Tienda</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="Tienda/windowsoffice.html">Windows y Office</a>
+                        <a href="Tienda/programas.html">Programas</a>
+                        <a href="Tienda/streaming.html">Streaming</a>
+                    </div>
+                </div>
+                <a href="gestion-codigos.html" class="nav-link">
+                    <i class="fas fa-key"></i>
+                    <span>Gestión de Códigos</span>
+                </a>
+                <a href="correo-temporal.html" class="nav-link">
+                    <i class="fas fa-envelope"></i>
+                    <span>Correo Temporal</span>
+                </a>
+            </nav>
+
+            <!-- Header Actions con carrito -->
+            <div class="header-actions">
+                <a href="index.html" class="btn-home">
+                    <i class="fas fa-home"></i>
+                    <span>Inicio</span>
+                </a>
+                
+                <!-- Botón del carrito -->
+                <button class="cart-btn" id="cartBtn">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count" id="cartCount">0</span>
+                </button>
+                
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Menú móvil lateral -->
+    <div class="mobile-sidebar" id="mobileSidebar">
+        <div class="sidebar-header">
+            <h3>HANS WEB</h3>
+            <button class="sidebar-close" id="sidebarClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="tienda.html" class="sidebar-link active">
+                <i class="fas fa-shopping-cart"></i>
+                Tienda
+            </a>
+            <div class="sidebar-submenu">
+                <a href="Tienda/windowsoffice.html">Windows y Office</a>
+                <a href="Tienda/programas.html">Programas</a>
+                <a href="Tienda/streaming.html">Streaming</a>
+            </div>
+            <a href="gestion-codigos.html" class="sidebar-link">
+                <i class="fas fa-key"></i>
+                Gestión de Códigos
+            </a>
+            <a href="correo-temporal.html" class="sidebar-link">
+                <i class="fas fa-envelope"></i>
+                Correo Temporal
+            </a>
+        </nav>
+    </div>
+
+    <!-- Carrito lateral -->
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>
+                <i class="fas fa-shopping-cart"></i>
+                Carro de la Compra
+            </h3>
+            <button class="cart-close" id="cartClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="cart-content" id="cartContent">
+            <div class="cart-empty">
+                <i class="fas fa-shopping-cart"></i>
+                <p>Tu carrito está vacío</p>
+                <small>Añade productos para comenzar tu compra</small>
+            </div>
+        </div>
+        
+        <div class="cart-footer" id="cartFooter">
+            <div class="cart-totals">
+                <div class="cart-subtotal">
+                    <span>Subtotal:</span>
+                    <span id="cartSubtotal">S/ 0.00</span>
+                </div>
+                <div class="cart-total">
+                    <span>Total:</span>
+                    <span id="cartTotal">S/ 0.00</span>
+                </div>
+            </div>
+            <button class="btn-checkout" id="checkoutBtn">
+                <i class="fab fa-whatsapp"></i>
+                Finalizar Compra
+            </button>
+        </div>
+    </div>
+
+    <!-- Contenido Principal -->
+    <main class="main-content">
+        <!-- Breadcrumbs -->
+        <div class="breadcrumbs">
+            <div class="container">
+                <a href="index.html">Inicio</a>
+                <span>/</span>
+                <span>Tienda</span>
+            </div>
+        </div>
+
+        <!-- Cabecera de Tienda -->
+        <section class="store-header">
+            <div class="container">
+                <h1>Tienda Digital</h1>
+                <p>Descubre nuestra amplia selección de licencias, programas y servicios digitales</p>
+                
+                <!-- Proceso de Compra -->
+                <div class="purchase-process">
+                    <h3>Proceso de Compra Fácil:</h3>
+                    <div class="process-steps">
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <span>Explora productos</span>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <span>Añade al carrito</span>
+                        </div>
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <span>Compra vía WhatsApp</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Categorías de Productos -->
+        <section class="product-categories">
+            <div class="container">
+                <div class="categories-grid">
+                    <!-- Windows y Office -->
+                    <div class="category-card" onclick="navigateToCategory('Tienda/windowsoffice.html')">
+                        <div class="category-icon">
+                            <i class="fab fa-windows"></i>
+                        </div>
+                        <div class="category-content">
+                            <h3>Windows y Office</h3>
+                            <p>Licencias originales de Windows y Microsoft Office</p>
+                            <div class="category-keywords">
+                                <span class="keyword-tag">Windows</span>
+                                <span class="keyword-tag">Office</span>
+                                <span class="keyword-tag">Licencias</span>
+                                <span class="keyword-tag">Microsoft</span>
+                            </div>
+                        </div>
+                        <div class="category-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+
+                    <!-- Programas -->
+                    <div class="category-card" onclick="navigateToCategory('Tienda/programas.html')">
+                        <div class="category-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="category-content">
+                            <h3>Programas</h3>
+                            <p>Software especializado y herramientas profesionales</p>
+                            <div class="category-keywords">
+                                <span class="keyword-tag">Software</span>
+                                <span class="keyword-tag">Herramientas</span>
+                                <span class="keyword-tag">Programas</span>
+                                <span class="keyword-tag">Profesional</span>
+                            </div>
+                        </div>
+                        <div class="category-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+
+                    <!-- Streaming -->
+                    <div class="category-card" onclick="navigateToCategory('Tienda/streaming.html')">
+                        <div class="category-icon">
+                            <i class="fas fa-play-circle"></i>
+                        </div>
+                        <div class="category-content">
+                            <h3>Streaming</h3>
+                            <p>Servicios de streaming y entretenimiento digital</p>
+                            <div class="category-keywords">
+                                <span class="keyword-tag">Netflix</span>
+                                <span class="keyword-tag">Disney+</span>
+                                <span class="keyword-tag">Amazon</span>
+                                <span class="keyword-tag">Streaming</span>
+                            </div>
+                        </div>
+                        <div class="category-arrow">
+                            <i class="fas fa-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="global-footer">
+        <div class="footer-container">
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>Servicios</h4>
+                    <a href="tienda.html">Tienda</a>
+                    <a href="gestion-codigos.html">Gestión de Códigos</a>
+                    <a href="correo-temporal.html">Correo Temporal</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Información</h4>
+                    <a href="#guias">Guías</a>
+                    <a href="#contacto">Contacto</a>
+                    <a href="#terminos">Términos y Condiciones</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Síguenos</h4>
+                    <div class="social-links">
+                        <a href="#" class="social-link">
+                            <i class="fab fa-telegram"></i>
+                            Telegram
+                        </a>
+                        <a href="https://wa.me/51965485348" class="social-link">
+                            <i class="fab fa-whatsapp"></i>
+                            WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 HANS WEB - Desarrollado por @romel.jeans</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Overlay para carrito -->
+    <div class="cart-overlay" id="cartOverlay"></div>
+
+    <script src="js/global.js"></script>
+    <script src="js/carrito.js"></script>
+</body>
+</html>

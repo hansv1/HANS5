@@ -1,0 +1,673 @@
+/* Estilos específicos para Correo Temporal */
+
+/* Introducción del servicio */
+.service-intro {
+    padding: 40px 0;
+    background: linear-gradient(135deg, var(--primary-color) 0%, #0891b2 100%);
+    color: white;
+    text-align: center;
+}
+
+.service-intro h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.service-intro p {
+    font-size: 1.1rem;
+    margin-bottom: 30px;
+    opacity: 0.9;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.how-it-works-intro {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 25px;
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: left;
+}
+
+.how-it-works-intro h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.how-it-works-intro p {
+    margin: 0;
+    line-height: 1.6;
+    opacity: 0.95;
+}
+
+/* Secciones principales */
+.generator-section,
+.email-section,
+.inbox-section {
+    padding: 40px 0;
+}
+
+.generator-section {
+    background: var(--secondary-color);
+}
+
+/* Tarjetas de sección */
+.generator-card,
+.email-card,
+.inbox-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    border: 1px solid #e9ecef;
+}
+
+.generator-card h2,
+.email-card h2,
+.inbox-card h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Grupo de input */
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-weight: 500;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+}
+
+.input-container {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.input-container input {
+    flex: 1;
+    min-width: 250px;
+    padding: 12px 15px;
+    border: 2px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+.input-container input:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(11, 98, 106, 0.1);
+}
+
+.input-important {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 15px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+}
+
+.input-important i {
+    color: #856404;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.input-important code {
+    background: rgba(0,0,0,0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+}
+
+.error-message {
+    color: var(--error-color);
+    font-size: 0.9rem;
+    margin-top: 10px;
+    padding: 10px;
+    background: #f8d7da;
+    border-radius: 6px;
+    border: 1px solid #f5c6cb;
+    display: none;
+}
+
+.error-message.show {
+    display: block;
+}
+
+/* Visualización del email */
+.email-display {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: var(--secondary-color);
+    border: 2px solid var(--primary-color);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.email-address {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    word-break: break-all;
+}
+
+.email-address i {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+}
+
+.btn-copy {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 15px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.btn-copy:hover {
+    background: rgba(11, 98, 106, 0.8);
+    transform: translateY(-2px);
+}
+
+/* Estado del email */
+.email-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #6c757d;
+    position: relative;
+}
+
+.status-dot.active {
+    background: var(--success-color);
+    animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+    0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+}
+
+.email-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-danger {
+    background: var(--error-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+}
+
+/* Bandeja de entrada */
+.inbox-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.inbox-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.refresh-select {
+    padding: 8px 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    background: white;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.refresh-select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+/* Lista de emails */
+.email-list {
+    min-height: 200px;
+}
+
+.no-emails {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-secondary);
+}
+
+.no-emails i {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.no-emails p {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.no-emails small {
+    font-size: 0.9rem;
+}
+
+/* Item de email */
+.email-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: var(--transition);
+    background: white;
+}
+
+.email-item:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.email-item:last-child {
+    margin-bottom: 0;
+}
+
+.email-icon {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, var(--primary-color), #0891b2);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.email-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.email-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 5px;
+    gap: 10px;
+}
+
+.email-from {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.email-time {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.email-subject {
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 0.9rem;
+}
+
+.email-preview {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.3;
+}
+
+/* Modal de email */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    padding: 20px;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 30px;
+    border-bottom: 1px solid #e9ecef;
+    background: var(--secondary-color);
+}
+
+.modal-header h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    flex: 1;
+    margin-right: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 5px;
+    border-radius: 4px;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.btn-close:hover {
+    background: rgba(0,0,0,0.1);
+    color: var(--text-primary);
+}
+
+.modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 25px 30px;
+}
+
+.email-meta {
+    background: var(--secondary-color);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.meta-item {
+    display: flex;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+.meta-item:last-child {
+    margin-bottom: 0;
+}
+
+.meta-item strong {
+    min-width: 80px;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.meta-item span {
+    color: var(--text-secondary);
+    word-break: break-word;
+}
+
+.email-content {
+    line-height: 1.6;
+    color: var(--text-primary);
+}
+
+.email-content * {
+    max-width: 100% !important;
+}
+
+.email-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.email-content a {
+    color: var(--primary-color);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: var(--transition);
+}
+
+.email-content a:hover {
+    border-bottom-color: var(--primary-color);
+}
+
+/* Estados ocultos */
+.hidden {
+    display: none !important;
+}
+
+/* Loading states */
+.loading-spinner {
+    text-align: center;
+    padding: 40px;
+    color: white;
+}
+
+.loading-spinner i {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.loading-spinner p {
+    font-size: 1.1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .service-intro h1 {
+        font-size: 2rem;
+    }
+    
+    .how-it-works-intro {
+        padding: 20px;
+        margin: 0 15px;
+    }
+    
+    .generator-card,
+    .email-card,
+    .inbox-card {
+        padding: 20px;
+        margin: 0 15px;
+    }
+    
+    .input-container {
+        flex-direction: column;
+    }
+    
+    .input-container input {
+        min-width: auto;
+    }
+    
+    .email-display {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+    
+    .email-status {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+    
+    .inbox-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .inbox-controls {
+        justify-content: center;
+    }
+    
+    .email-item {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .email-header {
+        justify-content: center;
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .modal {
+        padding: 10px;
+    }
+    
+    .modal-header,
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .email-meta {
+        padding: 15px;
+    }
+    
+    .meta-item {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .generator-card,
+    .email-card,
+    .inbox-card {
+        padding: 15px;
+        margin: 0 10px;
+    }
+    
+    .how-it-works-intro {
+        margin: 0 10px;
+        padding: 15px;
+    }
+}
+
+/* Animaciones suaves */
+.email-section,
+.inbox-section {
+    animation: fadeInUp 0.6s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.email-item {
+    animation: slideInLeft 0.4s ease;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
