@@ -1087,6 +1087,54 @@ class TempMailManager {
         }
     }
 
+    // Funciones de utilidad adicionales
+    getSystemStats() {
+        return {
+            currentProvider: this.currentProvider?.name,
+            emailsCount: this.emails?.length || 0,
+            isPolling: this.isPolling,
+            refreshInterval: this.refreshTime,
+            lastCheck: this.state.lastCheck,
+            errorCount: this.state.errorCount,
+            uptime: this.state.emailGenerated ? Date.now() - (this.state.lastCheck?.getTime() || Date.now()) : 0
+        };
+    }
+
+    exportSystemConfig() {
+        const config = {
+            providers: this.providers.map(p => ({
+                name: p.name,
+                namespace: p.namespace,
+                baseUrl: p.baseUrl,
+                emailFormat: p.emailFormat,
+                active: p.active
+            })),
+            settings: {
+                refreshTime: this.refreshTime,
+                maxRetries: this.maxRetries
+            },
+            stats: this.getSystemStats()
+        };
+        
+        this.downloadFile(JSON.stringify(config, null, 2), 'tempmail_config.json', 'application/json');
+        
+        if (window.HansWeb && window.HansWeb.Utils) {
+            window.HansWeb.Utils.showToast('Configuración del sistema exportada', 'info');
+        }
+    }
+
+    // Método para depuración y diagnóstico
+    debugInfo() {
+        console.group('🔧 TempMail Debug Info');
+        console.log('Provider actual:', this.currentProvider);
+        console.log('Estado:', this.state);
+        console.log('Emails:', this.emails);
+        console.log('Configuración:', this.getSystemStats());
+        console.groupEnd();
+        
+        return this.getSystemStats();
+    }
+
     showLoading(message = 'Cargando...') {
         const loadingOverlay = document.getElementById('loadingOverlay');
         if (loadingOverlay) {
@@ -1107,10 +1155,18 @@ class TempMailManager {
 }
 
 // Inicializar cuando el DOM esté listo
-console.log('Cargando script de correo temporal...');
+console.log('🚀 Cargando sistema de correo temporal optimizado...');
 document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM listo, inicializando TempMail Manager...');
+    console.log('✅ DOM listo, inicializando TempMail Manager...');
     window.tempMailManager = new TempMailManager();
+    
+    // Agregar accesos globales para depuración
+    window.debugTempMail = () => window.tempMailManager.debugInfo();
+    window.exportTempMailConfig = () => window.tempMailManager.exportSystemConfig();
+    
+    console.log('💡 Funciones de depuración disponibles:');
+    console.log('  - debugTempMail(): Mostrar información del sistema');
+    console.log('  - exportTempMailConfig(): Exportar configuración');
 });
 
 window.TempMailManager = TempMailManager;
