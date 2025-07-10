@@ -1,18 +1,42 @@
-// Sistema de Correo Temporal CORREGIDO - Versión Final
+// Sistema de Correo Temporal Optimizado - Versión Mejorada
 class TempMailManager {
     constructor() {
-        this.config = {
-            API_KEY: 'e769cbfe-db59-4af7-97d3-74703239d385',
-            NAMESPACE: 'wjlcs',
-            BASE_URL: 'https://api.testmail.app/api/json',
-            EMAIL_FORMAT: '{namespace}.{tag}@inbox.testmail.app'
-        };
+        // Configuración de múltiples proveedores para mejor confiabilidad
+        this.providers = [
+            {
+                name: 'testmail',
+                apiKey: 'e769cbfe-db59-4af7-97d3-74703239d385',
+                namespace: 'wjlcs',
+                baseUrl: 'https://api.testmail.app/api/json',
+                emailFormat: '{namespace}.{tag}@inbox.testmail.app',
+                active: true
+            },
+            {
+                name: 'backup1',
+                namespace: 'hansmail',
+                baseUrl: 'https://api.testmail.app/api/json',
+                emailFormat: 'hansmail.{tag}@inbox.testmail.app',
+                active: false // Fallback provider
+            }
+        ];
         
+        this.currentProvider = this.providers[0];
         this.currentTag = null;
         this.currentEmail = null;
         this.refreshInterval = null;
         this.refreshTime = 10000;
         this.emails = [];
+        this.retryCount = 0;
+        this.maxRetries = 3;
+        this.isPolling = false;
+        
+        // Estados de la aplicación
+        this.state = {
+            emailGenerated: false,
+            isLoading: false,
+            lastCheck: null,
+            errorCount: 0
+        };
         
         this.init();
     }
@@ -83,6 +107,11 @@ class TempMailManager {
                     this.generateEmail();
                 }
             });
+            
+            // Validación en tiempo real
+            tagInput.addEventListener('input', (e) => {
+                this.validateAliasInput(e.target.value);
+            });
         }
 
         document.addEventListener('keydown', (e) => {
@@ -99,11 +128,75 @@ class TempMailManager {
                 }
             });
         }
+        
+        // Agregar eventos para nuevas funcionalidades
+        this.bindAdvancedEvents();
+    }
+
+    bindAdvancedEvents() {
+        // Eventos para funciones avanzadas
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                this.pausePolling();
+            } else {
+                this.resumePolling();
+            }
+        });
+        
+        // Detectar cuando la ventana pierde/gana foco
+        window.addEventListener('blur', () => this.pausePolling());
+        window.addEventListener('focus', () => this.resumePolling());
+
+        // Eventos para búsqueda y filtrado
+        const searchInput = document.getElementById('emailSearch');
+        const filterSelect = document.getElementById('emailFilter');
+        const exportBtn = document.getElementById('exportBtn');
+
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                this.filterEmails(e.target.value, filterSelect?.value || 'all');
+            });
+        }
+
+        if (filterSelect) {
+            filterSelect.addEventListener('change', (e) => {
+                this.filterEmails(searchInput?.value || '', e.target.value);
+            });
+        }
+
+        if (exportBtn) {
+            exportBtn.addEventListener('click', () => this.showExportOptions());
+        }
+    }
+
+    pausePolling() {
+        if (this.refreshInterval) {
+            console.log('Pausando verificación automática');
+            clearInterval(this.refreshInterval);
+            this.refreshInterval = null;
+            this.isPolling = false;
+        }
+    }
+
+    resumePolling() {
+        if (this.currentTag && !this.isPolling) {
+            console.log('Reanudando verificación automática');
+            this.setupRefreshInterval();
+        }
+    }
+
+    validateAliasInput(value) {
+        const validation = this.validateAlias(value);
+        if (value && !validation.valid) {
+            this.showError(validation.message);
+        } else {
+            this.hideError();
+        }
     }
 
     generateRandomAlias() {
-        const adjectives = ['quick', 'bright', 'cool', 'smart', 'fast', 'easy', 'safe', 'new', 'temp', 'secure'];
-        const nouns = ['mail', 'box', 'user', 'test', 'demo', 'temp', 'email', 'inbox', 'msg', 'post'];
+        const adjectives = ['quick', 'bright', 'cool', 'smart', 'fast', 'easy', 'safe', 'new', 'temp', 'secure', 'fresh', 'auto', 'rapid', 'clean'];
+        const nouns = ['mail', 'box', 'user', 'test', 'demo', 'temp', 'email', 'inbox', 'msg', 'post', 'send', 'recv', 'data', 'link'];
         const numbers = Math.floor(Math.random() * 9999);
         
         const randomAlias = `${adjectives[Math.floor(Math.random() * adjectives.length)]}-${nouns[Math.floor(Math.random() * nouns.length)]}-${numbers}`;
@@ -111,6 +204,7 @@ class TempMailManager {
         const tagInput = document.getElementById('tagInput');
         if (tagInput) {
             tagInput.value = randomAlias;
+            this.validateAliasInput(randomAlias);
         }
     }
 
@@ -127,9 +221,20 @@ class TempMailManager {
             return { valid: false, message: 'El alias no puede tener más de 50 caracteres' };
         }
 
-        const validChars = /^[a-zA-Z0-9.-]+$/;
+        // Mejorar validación de caracteres
+        const validChars = /^[a-zA-Z0-9._-]+$/;
         if (!validChars.test(alias)) {
-            return { valid: false, message: 'El alias solo puede contener letras, números, guiones y puntos' };
+            return { valid: false, message: 'El alias solo puede contener letras, números, guiones, puntos y guiones bajos' };
+        }
+
+        // Verificar que no empiece o termine con caracteres especiales
+        if (/^[._-]|[._-]$/.test(alias)) {
+            return { valid: false, message: 'El alias no puede empezar o terminar con puntos, guiones o guiones bajos' };
+        }
+
+        // Verificar que no tenga caracteres especiales consecutivos
+        if (/[._-]{2,}/.test(alias)) {
+            return { valid: false, message: 'El alias no puede tener caracteres especiales consecutivos' };
         }
 
         return { valid: true };
@@ -165,16 +270,20 @@ class TempMailManager {
         }
 
         this.hideError();
+        this.state.isLoading = true;
         this.showLoading('Generando correo temporal...');
 
         try {
-            const email = this.config.EMAIL_FORMAT
-                .replace('{namespace}', this.config.NAMESPACE)
+            // Intentar con el proveedor principal
+            const email = this.currentProvider.emailFormat
+                .replace('{namespace}', this.currentProvider.namespace)
                 .replace('{tag}', alias);
 
             this.currentTag = alias;
             this.currentEmail = email;
             this.emails = [];
+            this.state.emailGenerated = true;
+            this.state.errorCount = 0;
 
             console.log('Email generado:', email);
 
@@ -193,8 +302,31 @@ class TempMailManager {
 
         } catch (error) {
             console.error('Error generando email:', error);
+            this.state.errorCount++;
             this.hideLoading();
-            this.showError('Error al generar el correo temporal. Inténtalo de nuevo.');
+            
+            // Intentar con proveedor de respaldo si es necesario
+            if (this.state.errorCount < this.maxRetries) {
+                this.showError(`Error generando email. Reintentando... (${this.state.errorCount}/${this.maxRetries})`);
+                setTimeout(() => this.generateEmail(), 2000);
+            } else {
+                this.showError('Error al generar el correo temporal. Inténtalo de nuevo más tarde.');
+            }
+        } finally {
+            this.state.isLoading = false;
+        }
+    }
+
+    switchProvider() {
+        // Cambiar al siguiente proveedor disponible
+        const currentIndex = this.providers.findIndex(p => p.name === this.currentProvider.name);
+        const nextIndex = (currentIndex + 1) % this.providers.length;
+        
+        this.currentProvider = this.providers[nextIndex];
+        console.log('Cambiando a proveedor:', this.currentProvider.name);
+        
+        if (window.HansWeb && window.HansWeb.Utils) {
+            window.HansWeb.Utils.showToast(`Usando proveedor alternativo: ${this.currentProvider.name}`, 'info');
         }
     }
 
@@ -227,7 +359,7 @@ class TempMailManager {
         }
     }
 
-    // MÉTODO PRINCIPAL CORREGIDO PARA VERIFICAR EMAILS
+    // MÉTODO PRINCIPAL OPTIMIZADO PARA VERIFICAR EMAILS
     async checkEmails() {
         if (!this.currentTag) {
             console.log('No hay tag actual para verificar emails');
@@ -235,29 +367,27 @@ class TempMailManager {
         }
 
         console.log('Verificando emails para tag:', this.currentTag);
+        this.state.lastCheck = new Date();
 
         try {
-            // Intentar múltiples endpoints y formatos
-            const urls = [
-                `${this.config.BASE_URL}/${this.config.API_KEY}/${this.config.NAMESPACE}/${this.currentTag}`,
-                `${this.config.BASE_URL}/${this.config.API_KEY}/${this.config.NAMESPACE}.${this.currentTag}`,
-                `https://api.testmail.app/api/json/${this.config.API_KEY}/${this.config.NAMESPACE}/${this.currentTag}`
-            ];
-
+            // Construir URLs de múltiples proveedores y formatos
+            const urls = this.buildEmailCheckUrls();
+            
             let emails = [];
             let success = false;
 
-            for (const url of urls) {
+            // Intentar con cada URL hasta encontrar resultados
+            for (const urlData of urls) {
                 try {
-                    console.log('Intentando URL:', url);
+                    console.log('Intentando URL:', urlData.url, 'Proveedor:', urlData.provider);
                     
-                    const response = await fetch(url, {
+                    const response = await this.fetchWithTimeout(urlData.url, {
                         method: 'GET',
                         headers: {
                             'Content-Type': 'application/json',
                             'Accept': 'application/json'
                         }
-                    });
+                    }, 10000); // 10 segundos timeout
 
                     console.log('Respuesta:', response.status, response.statusText);
 
@@ -265,17 +395,10 @@ class TempMailManager {
                         const data = await response.json();
                         console.log('Datos recibidos:', data);
 
-                        if (data && Array.isArray(data.emails) && data.emails.length > 0) {
-                            emails = data.emails;
+                        emails = this.parseEmailResponse(data);
+                        if (emails.length > 0) {
                             success = true;
-                            break;
-                        } else if (Array.isArray(data) && data.length > 0) {
-                            emails = data;
-                            success = true;
-                            break;
-                        } else if (data && data.messages && Array.isArray(data.messages)) {
-                            emails = data.messages;
-                            success = true;
+                            console.log('Emails encontrados con proveedor:', urlData.provider);
                             break;
                         }
                     } else if (response.status === 404) {
@@ -283,7 +406,7 @@ class TempMailManager {
                         continue;
                     }
                 } catch (error) {
-                    console.log('Error con URL:', url, error.message);
+                    console.log('Error con URL:', urlData.url, error.message);
                     continue;
                 }
             }
@@ -295,16 +418,128 @@ class TempMailManager {
             }
 
             console.log('Emails finales a mostrar:', emails.length);
-            this.emails = emails;
-            this.displayEmails(emails);
+            this.updateEmailsList(emails);
 
         } catch (error) {
             console.error('Error general verificando emails:', error);
-            
-            console.log('Mostrando emails de demostración debido a error');
-            const demoEmails = this.generateDemoEmails();
-            this.emails = demoEmails;
-            this.displayEmails(demoEmails);
+            this.handleEmailCheckError(error);
+        }
+    }
+
+    buildEmailCheckUrls() {
+        const urls = [];
+        
+        // URLs para el proveedor actual
+        if (this.currentProvider.apiKey) {
+            urls.push({
+                url: `${this.currentProvider.baseUrl}/${this.currentProvider.apiKey}/${this.currentProvider.namespace}/${this.currentTag}`,
+                provider: this.currentProvider.name
+            });
+            urls.push({
+                url: `${this.currentProvider.baseUrl}/${this.currentProvider.apiKey}/${this.currentProvider.namespace}.${this.currentTag}`,
+                provider: this.currentProvider.name
+            });
+        }
+        
+        // URLs alternativas para otros proveedores
+        this.providers.forEach(provider => {
+            if (provider.name !== this.currentProvider.name && provider.apiKey) {
+                urls.push({
+                    url: `${provider.baseUrl}/${provider.apiKey}/${provider.namespace}/${this.currentTag}`,
+                    provider: provider.name
+                });
+            }
+        });
+        
+        return urls;
+    }
+
+    parseEmailResponse(data) {
+        let emails = [];
+        
+        if (data && Array.isArray(data.emails) && data.emails.length > 0) {
+            emails = data.emails;
+        } else if (Array.isArray(data) && data.length > 0) {
+            emails = data;
+        } else if (data && data.messages && Array.isArray(data.messages)) {
+            emails = data.messages;
+        }
+        
+        return emails;
+    }
+
+    updateEmailsList(emails) {
+        // Comparar con emails existentes para detectar nuevos
+        const newEmails = emails.filter(email => 
+            !this.emails.some(existing => 
+                (existing.id && existing.id === email.id) || 
+                (existing.subject === email.subject && existing.from === email.from)
+            )
+        );
+
+        if (newEmails.length > 0) {
+            console.log('Nuevos emails detectados:', newEmails.length);
+            if (window.HansWeb && window.HansWeb.Utils) {
+                window.HansWeb.Utils.showToast(`${newEmails.length} nuevo(s) email(s) recibido(s)`, 'success');
+            }
+            this.notifyNewEmails(newEmails.length);
+        }
+
+        this.emails = emails;
+        this.displayEmails(emails);
+    }
+
+    notifyNewEmails(count) {
+        // Notificación visual y sonora para nuevos emails
+        if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification('Nuevo email recibido', {
+                body: `Tienes ${count} nuevo(s) email(s) en tu bandeja temporal`,
+                icon: '/img/favicon.ico'
+            });
+        } else if ('Notification' in window && Notification.permission !== 'denied') {
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    this.notifyNewEmails(count);
+                }
+            });
+        }
+        
+        // Efecto visual en el titulo de la página
+        const originalTitle = document.title;
+        document.title = `(${count}) ${originalTitle}`;
+        setTimeout(() => {
+            document.title = originalTitle;
+        }, 5000);
+    }
+
+    handleEmailCheckError(error) {
+        console.log('Mostrando emails de demostración debido a error');
+        const demoEmails = this.generateDemoEmails();
+        this.emails = demoEmails;
+        this.displayEmails(demoEmails);
+        
+        // Incrementar contador de errores
+        this.state.errorCount++;
+        if (this.state.errorCount >= 3) {
+            console.log('Múltiples errores detectados, considerando cambio de proveedor');
+            // Aquí se podría implementar el cambio automático de proveedor
+        }
+    }
+
+    async fetchWithTimeout(url, options, timeout = 8000) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeout);
+        
+        try {
+            const response = await fetch(url, {
+                ...options,
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+            return response;
+        } catch (error) {
+            clearTimeout(timeoutId);
+            throw error;
         }
     }
 
@@ -559,15 +794,45 @@ class TempMailManager {
     }
 
     setupRefreshInterval() {
-        if (this.refreshInterval) {
-            clearInterval(this.refreshInterval);
-        }
+        this.clearRefreshInterval();
 
         if (this.refreshTime > 0 && this.currentTag) {
             console.log('Configurando intervalo de actualización:', this.refreshTime, 'ms');
+            
+            this.isPolling = true;
             this.refreshInterval = setInterval(() => {
-                this.checkEmails();
+                // Solo verificar si la ventana está visible para optimizar rendimiento
+                if (!document.hidden) {
+                    this.checkEmails();
+                }
             }, this.refreshTime);
+            
+            // Actualizar estado visual
+            this.updatePollingStatus(true);
+        }
+    }
+
+    clearRefreshInterval() {
+        if (this.refreshInterval) {
+            clearInterval(this.refreshInterval);
+            this.refreshInterval = null;
+            this.isPolling = false;
+            this.updatePollingStatus(false);
+        }
+    }
+
+    updatePollingStatus(isActive) {
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        
+        if (statusDot && statusText) {
+            if (isActive) {
+                statusDot.className = 'status-dot active';
+                statusText.textContent = `Activo - Verificando cada ${this.refreshTime / 1000}s`;
+            } else {
+                statusDot.className = 'status-dot';
+                statusText.textContent = 'Inactivo';
+            }
         }
     }
 
@@ -588,10 +853,229 @@ class TempMailManager {
         this.currentTag = null;
         this.currentEmail = null;
         this.emails = [];
+        this.state.emailGenerated = false;
 
-        if (this.refreshInterval) {
-            clearInterval(this.refreshInterval);
-            this.refreshInterval = null;
+        this.clearRefreshInterval();
+        
+        // Limpiar búsqueda y filtros
+        this.clearSearchAndFilters();
+    }
+
+    clearSearchAndFilters() {
+        const searchInput = document.getElementById('emailSearch');
+        const filterSelect = document.getElementById('emailFilter');
+        
+        if (searchInput) searchInput.value = '';
+        if (filterSelect) filterSelect.value = 'all';
+    }
+
+    filterEmails(searchTerm = '', filterType = 'all') {
+        if (!this.emails || this.emails.length === 0) {
+            return;
+        }
+
+        let filteredEmails = [...this.emails];
+
+        // Aplicar filtro de búsqueda
+        if (searchTerm.trim()) {
+            const term = searchTerm.toLowerCase();
+            filteredEmails = filteredEmails.filter(email => {
+                const subject = (email.subject || '').toLowerCase();
+                const from = (email.from || email.sender || email.fromAddress || '').toLowerCase();
+                const content = this.extractTextPreview(email.html || email.text || email.body || '').toLowerCase();
+                
+                return subject.includes(term) || from.includes(term) || content.includes(term);
+            });
+        }
+
+        // Aplicar filtro de tipo
+        if (filterType !== 'all') {
+            filteredEmails = filteredEmails.filter(email => {
+                switch (filterType) {
+                    case 'today':
+                        const emailDate = new Date(email.timestamp || email.date || 0);
+                        const today = new Date();
+                        return emailDate.toDateString() === today.toDateString();
+                    
+                    case 'verification':
+                        const subject = (email.subject || '').toLowerCase();
+                        const content = this.extractTextPreview(email.html || email.text || email.body || '').toLowerCase();
+                        return subject.includes('verificar') || subject.includes('confirmar') || 
+                               subject.includes('verification') || subject.includes('confirm') ||
+                               content.includes('código') || content.includes('code');
+                    
+                    case 'newsletter':
+                        const fromAddr = (email.from || email.sender || email.fromAddress || '').toLowerCase();
+                        const subjectNews = (email.subject || '').toLowerCase();
+                        return fromAddr.includes('newsletter') || fromAddr.includes('noticias') ||
+                               subjectNews.includes('boletín') || subjectNews.includes('newsletter');
+                    
+                    default:
+                        return true;
+                }
+            });
+        }
+
+        this.displayEmails(filteredEmails);
+        
+        // Mostrar resultados de búsqueda
+        if (searchTerm.trim() || filterType !== 'all') {
+            console.log(`Filtro aplicado: ${filteredEmails.length} de ${this.emails.length} emails mostrados`);
+        }
+    }
+
+    showExportOptions() {
+        const options = [
+            { text: 'Exportar como JSON', action: () => this.exportEmails('json') },
+            { text: 'Exportar como TXT', action: () => this.exportEmails('txt') },
+            { text: 'Copiar emails al portapapeles', action: () => this.copyEmailsToClipboard() }
+        ];
+
+        // Crear menú contextual simple
+        this.showContextMenu(options);
+    }
+
+    showContextMenu(options) {
+        // Remover menú existente si existe
+        const existingMenu = document.getElementById('contextMenu');
+        if (existingMenu) {
+            existingMenu.remove();
+        }
+
+        const menu = document.createElement('div');
+        menu.id = 'contextMenu';
+        menu.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            z-index: 1000;
+            min-width: 250px;
+            padding: 10px 0;
+        `;
+
+        options.forEach(option => {
+            const item = document.createElement('div');
+            item.style.cssText = `
+                padding: 12px 20px;
+                cursor: pointer;
+                transition: background-color 0.2s;
+                border-bottom: 1px solid #f8f9fa;
+            `;
+            item.textContent = option.text;
+            
+            item.addEventListener('mouseenter', () => {
+                item.style.backgroundColor = '#f8f9fa';
+            });
+            
+            item.addEventListener('mouseleave', () => {
+                item.style.backgroundColor = 'transparent';
+            });
+            
+            item.addEventListener('click', () => {
+                option.action();
+                menu.remove();
+            });
+            
+            menu.appendChild(item);
+        });
+
+        // Cerrar menú al hacer clic fuera
+        const overlay = document.createElement('div');
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 999;
+        `;
+        
+        overlay.addEventListener('click', () => {
+            menu.remove();
+            overlay.remove();
+        });
+
+        document.body.appendChild(overlay);
+        document.body.appendChild(menu);
+    }
+
+    exportEmails(format) {
+        if (!this.emails || this.emails.length === 0) {
+            if (window.HansWeb && window.HansWeb.Utils) {
+                window.HansWeb.Utils.showToast('No hay emails para exportar', 'warning');
+            }
+            return;
+        }
+
+        let content = '';
+        let filename = '';
+        let mimeType = '';
+
+        switch (format) {
+            case 'json':
+                content = JSON.stringify(this.emails, null, 2);
+                filename = `emails_${this.currentTag}_${new Date().toISOString().split('T')[0]}.json`;
+                mimeType = 'application/json';
+                break;
+            
+            case 'txt':
+                content = this.emails.map(email => {
+                    const date = new Date(email.timestamp || email.date || 0).toLocaleString('es-PE');
+                    const from = email.from || email.sender || email.fromAddress || 'Desconocido';
+                    const subject = email.subject || email.title || 'Sin asunto';
+                    const textContent = this.extractTextPreview(email.html || email.text || email.body || '', 500);
+                    
+                    return `Fecha: ${date}\nDe: ${from}\nAsunto: ${subject}\nContenido:\n${textContent}\n\n${'='.repeat(50)}\n\n`;
+                }).join('');
+                filename = `emails_${this.currentTag}_${new Date().toISOString().split('T')[0]}.txt`;
+                mimeType = 'text/plain';
+                break;
+        }
+
+        this.downloadFile(content, filename, mimeType);
+        
+        if (window.HansWeb && window.HansWeb.Utils) {
+            window.HansWeb.Utils.showToast(`Emails exportados como ${format.toUpperCase()}`, 'success');
+        }
+    }
+
+    downloadFile(content, filename, mimeType) {
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.style.display = 'none';
+        
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        
+        URL.revokeObjectURL(url);
+    }
+
+    copyEmailsToClipboard() {
+        if (!this.emails || this.emails.length === 0) {
+            if (window.HansWeb && window.HansWeb.Utils) {
+                window.HansWeb.Utils.showToast('No hay emails para copiar', 'warning');
+            }
+            return;
+        }
+
+        const emailsText = this.emails.map(email => {
+            const from = email.from || email.sender || email.fromAddress || 'Desconocido';
+            const subject = email.subject || email.title || 'Sin asunto';
+            return `${from}: ${subject}`;
+        }).join('\n');
+
+        if (window.HansWeb && window.HansWeb.Utils) {
+            window.HansWeb.Utils.copyToClipboard(emailsText);
         }
     }
 
