@@ -196,16 +196,31 @@
                             3. Bandeja de Entrada
                         </h2>
                         <div class="inbox-controls">
-                            <button id="refreshBtn" class="btn-secondary">
-                                <i class="fas fa-sync"></i>
-                                Actualizar
-                            </button>
-                            <select id="refreshInterval" class="refresh-select">
-                                <option value="5000">5 segundos</option>
-                                <option value="10000" selected>10 segundos</option>
-                                <option value="30000">30 segundos</option>
-                                <option value="60000">1 minuto</option>
-                            </select>
+                            <div class="search-controls">
+                                <input type="text" id="emailSearch" placeholder="Buscar en emails..." class="search-input">
+                                <select id="emailFilter" class="filter-select">
+                                    <option value="all">Todos los emails</option>
+                                    <option value="today">Hoy</option>
+                                    <option value="verification">Verificación</option>
+                                    <option value="newsletter">Boletines</option>
+                                </select>
+                            </div>
+                            <div class="action-controls">
+                                <button id="exportBtn" class="btn-secondary" title="Exportar emails">
+                                    <i class="fas fa-download"></i>
+                                    Exportar
+                                </button>
+                                <button id="refreshBtn" class="btn-secondary">
+                                    <i class="fas fa-sync"></i>
+                                    Actualizar
+                                </button>
+                                <select id="refreshInterval" class="refresh-select">
+                                    <option value="5000">5 segundos</option>
+                                    <option value="10000" selected>10 segundos</option>
+                                    <option value="30000">30 segundos</option>
+                                    <option value="60000">1 minuto</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
                     <div id="emailList" class="email-list">
