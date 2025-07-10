@@ -466,6 +466,26 @@
     border: 1px solid #e9ecef;
 }
 
+.inbox-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.inbox-header h2,
+.inbox-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+}
+
 .inbox-header-compact {
     display: flex;
     justify-content: space-between;
@@ -506,12 +526,317 @@
     outline: none;
 }
 
+/* Lista de códigos de verificación */
+.codes-list,
+.email-list {
+    min-height: 200px;
+}
+
+.no-codes,
+.no-emails {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-secondary);
+}
+
+.no-codes i,
+.no-emails i {
+    font-size: 3rem;
+    margin-bottom: 20px;
+    opacity: 0.5;
+}
+
+.no-codes p,
+.no-emails p {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.no-codes small,
+.no-emails small {
+    font-size: 0.9rem;
+}
+
+/* Item de código de verificación */
+.code-item,
+.email-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: var(--transition);
+    background: white;
+}
+
+.code-item:hover,
+.email-item:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.code-item:last-child,
+.email-item:last-child {
+    margin-bottom: 0;
+}
+
+/* Ícono específico para códigos */
+.code-icon,
+.email-icon {
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, var(--primary-color), #0891b2);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+/* Ícono específico para plataformas */
+.code-icon.netflix {
+    background: linear-gradient(135deg, #e50914, #b20710);
+}
+
+.code-icon.disney {
+    background: linear-gradient(135deg, #113ccf, #0066ff);
+}
+
+.code-icon.amazon {
+    background: linear-gradient(135deg, #ff9900, #ff6600);
+}
+
+.code-details,
+.email-details {
+    flex: 1;
+    min-width: 0;
+}
+
+.code-header,
+.email-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 5px;
+    gap: 10px;
+}
+
+.code-platform,
+.email-from {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.code-time,
+.email-time {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.code-subject,
+.email-subject {
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 0.9rem;
+}
+
+.code-preview,
+.email-preview {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    line-height: 1.3;
+}
+
+/* Estilos especiales para códigos de verificación */
+.code-preview .verification-code {
+    background: rgba(11, 98, 106, 0.1);
+    color: var(--primary-color);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-weight: 600;
+}
+
+.code-preview .expires-in {
+    color: #dc3545;
+    font-weight: 500;
+}
+
+/* Modal de detalle de código/email */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    padding: 20px;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 700px;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-header,
+.modal-header-compact {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 30px;
+    border-bottom: 1px solid #e9ecef;
+    background: var(--secondary-color);
+}
+
+.modal-header h3,
+.modal-header-compact h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    flex: 1;
+    margin-right: 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    padding: 5px;
+    border-radius: 4px;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.btn-close:hover {
+    background: rgba(0,0,0,0.1);
+    color: var(--text-primary);
+}
+
+.modal-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 25px 30px;
+}
+
+.email-meta,
+.email-meta-compact {
+    background: var(--secondary-color);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 25px;
+}
+
+.meta-item {
+    display: flex;
+    margin-bottom: 10px;
+    gap: 10px;
+}
+
+.meta-item:last-child {
+    margin-bottom: 0;
+}
+
+.meta-item strong {
+    min-width: 80px;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.meta-item span {
+    color: var(--text-secondary);
+    word-break: break-word;
+}
+
+.email-content,
+.email-content-focused {
+    line-height: 1.6;
+    color: var(--text-primary);
+}
+
+.email-content *,
+.email-content-focused * {
+    max-width: 100% !important;
+}
+
+.email-content img,
+.email-content-focused img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.email-content a,
+.email-content-focused a {
+    color: var(--primary-color);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: var(--transition);
+}
+
+.email-content a:hover,
+.email-content-focused a:hover {
+    border-bottom-color: var(--primary-color);
+}
+
+/* Estilos especiales para códigos de verificación en modal */
+.email-content-focused .verification-code,
+.email-content .verification-code {
+    background: linear-gradient(135deg, var(--primary-color), #0891b2);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    display: inline-block;
+    margin: 10px 0;
+    box-shadow: 0 3px 10px rgba(11, 98, 106, 0.3);
+}
+
 /* Estados ocultos */
 .hidden {
     display: none !important;
 }
 
-/* Responsive Design */
+/* Responsive Design específico para bandeja de entrada */
 @media (max-width: 768px) {
     .service-intro h1 {
         font-size: 2rem;
@@ -576,6 +901,7 @@
         gap: 15px;
     }
     
+    .inbox-header,
     .inbox-header-compact {
         flex-direction: column;
         align-items: stretch;
@@ -583,6 +909,41 @@
     
     .inbox-controls {
         justify-content: center;
+    }
+    
+    .code-item,
+    .email-item {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+        gap: 10px;
+    }
+    
+    .code-header,
+    .email-header {
+        justify-content: center;
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .modal {
+        padding: 10px;
+    }
+    
+    .modal-header,
+    .modal-header-compact,
+    .modal-body {
+        padding: 20px;
+    }
+    
+    .email-meta,
+    .email-meta-compact {
+        padding: 15px;
+    }
+    
+    .meta-item {
+        flex-direction: column;
+        gap: 5px;
     }
 }
 
