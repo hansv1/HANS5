@@ -48,13 +48,14 @@
                 </a>
             </nav>
 
-            <!-- Header Actions -->
+            <!-- Botón de Inicio -->
             <div class="header-actions">
                 <a href="index.html" class="btn-home">
                     <i class="fas fa-home"></i>
                     <span>Inicio</span>
                 </a>
                 
+                <!-- Menú hamburguesa móvil -->
                 <button class="mobile-menu-btn" id="mobileMenuBtn">
                     <i class="fas fa-bars"></i>
                 </button>
@@ -84,7 +85,7 @@
                 <i class="fas fa-key"></i>
                 Gestión de Códigos
             </a>
-            <a href="correo-temporal.html" class="sidebar-link active">
+            <a href="correo-temporal.html" class="sidebar-link">
                 <i class="fas fa-envelope"></i>
                 Correo Temporal
             </a>
@@ -93,36 +94,18 @@
 
     <!-- Contenido Principal -->
     <main class="main-content">
-        <!-- Breadcrumbs -->
-        <div class="breadcrumbs">
-            <div class="container">
-                <a href="index.html">Inicio</a>
-                <span>/</span>
-                <span>Correo Temporal</span>
-            </div>
+        <!-- Header con descripción -->
+        <div class="temp-header">
+            <h2>Genera tu Correo Temporal</h2>
+            <p>Plataforma gratuita de generación de direcciones de correo electrónico de un solo uso</p>
         </div>
-
-        <!-- Descripción inicial -->
-        <section class="service-intro">
-            <div class="container">
-                <h1>Correo Temporal</h1>
-                <p>Genera direcciones de correo electrónico temporales y desechables para proteger tu privacidad online</p>
-                
-                <!-- Cómo Funciona - Descripción inicial -->
-                <div class="how-it-works-intro">
-                    <h3><i class="fas fa-lightbulb"></i> ¿Cómo Funciona?</h3>
-                    <p>Nuestro servicio de correo temporal te permite crear direcciones de email de un solo uso, perfectas para registros, verificaciones y descargas sin comprometer tu correo personal.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 1. Personaliza tu alias -->
+        
+        <!-- Generator Section -->
         <section class="generator-section">
             <div class="container">
                 <div class="generator-card">
-                    <h2>1. Personaliza tu alias</h2>
                     <div class="input-group">
-                        <label for="tagInput">Ingresa tu alias personalizado:</label>
+                        <label for="tagInput">Personaliza tu alias:</label>
                         <div class="input-container">
                             <input 
                                 type="text" 
@@ -136,14 +119,13 @@
                                 Generar
                             </button>
                             <button id="randomBtn" class="btn-secondary" title="Generar alias aleatorio">
-                                <i class="fas fa-shuffle"></i>
+                                <i class="fa-solid fa-shuffle"></i>
                                 Aleatorio
                             </button>
                         </div>
                         <div class="input-important">
-                            <i class="fas fa-exclamation-triangle"></i>
                             <strong>Importante:</strong> Los alias son sensibles a mayúsculas y minúsculas. 
-                            Por ejemplo, <code>TeSt@correo.com</code> y <code>test@correo.com</code> se consideran cuentas diferentes. 
+                            Por ejemplo, <span style="font-family: monospace;">TeSt@correo.com</span> y <span style="font-family: monospace;">test@correo.com</span> se consideran cuentas diferentes. 
                             Asegúrate de ingresar siempre el mismo formato.
                         </div>
                         <div id="tagError" class="error-message"></div>
@@ -152,11 +134,11 @@
             </div>
         </section>
 
-        <!-- 2. Tu correo temporal está listo -->
+        <!-- Generated Email Section -->
         <section id="emailSection" class="email-section hidden">
             <div class="container">
                 <div class="email-card">
-                    <h2>2. Tu correo temporal está listo</h2>
+                    <h3>Tu correo temporal está listo</h3>
                     <div class="email-display">
                         <div class="email-address">
                             <i class="fas fa-at"></i>
@@ -179,22 +161,23 @@
                             <button id="deleteBtn" class="btn-danger" title="Eliminar y generar nuevo alias">
                                 <i class="fas fa-trash"></i>
                                 Eliminar
-                            </button>
+                            </button>                       
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 3. Bandeja de Entrada -->
+        <!-- Inbox Section -->
         <section id="inboxSection" class="inbox-section hidden">
             <div class="container">
                 <div class="inbox-card">
-                    <div class="inbox-header">
-                        <h2>
+                    <!-- Encabezado optimizado -->
+                    <div class="inbox-header-compact">
+                        <h3>
                             <i class="fas fa-inbox"></i>
-                            3. Bandeja de Entrada
-                        </h2>
+                            Bandeja de Entrada
+                        </h3>
                         <div class="inbox-controls">
                             <button id="refreshBtn" class="btn-secondary">
                                 <i class="fas fa-sync"></i>
@@ -219,17 +202,19 @@
             </div>
         </section>
 
-        <!-- Modal de detalle de email -->
+        <!-- Email Detail Modal -->
         <div id="emailModal" class="modal hidden">
             <div class="modal-content">
-                <div class="modal-header">
+                <!-- Encabezado de modal compacto -->
+                <div class="modal-header-compact">
                     <h3 id="modalSubject"></h3>
                     <button id="closeModal" class="btn-close">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="email-meta">
+                    <!-- Meta información compacta -->
+                    <div class="email-meta-compact">
                         <div class="meta-item">
                             <strong>De:</strong>
                             <span id="modalFrom"></span>
@@ -243,15 +228,53 @@
                             <span id="modalDate"></span>
                         </div>
                     </div>
-                    <div class="email-content">
+                    <!-- Contenido del mensaje destacado -->
+                    <div class="email-content-focused">
                         <div id="modalContent"></div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- How it Works Section -->
+        <section class="how-it-works">
+            <div class="container">
+                <div class="info-card">
+                    <div class="info-content">
+                        <h3>
+                            <i class="fas fa-lightbulb"></i>
+                            ¿Cómo usar tu correo temporal?
+                        </h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <div class="info-number">1</div>
+                                <div class="info-text">
+                                    <strong>Genera y copia tu dirección temporal</strong>
+                                    <p>Usa el botón de generar para obtener tu email temporal único</p>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-number">2</div>
+                                <div class="info-text">
+                                    <strong>Regístrate en sitios web</strong>
+                                    <p>Úsalo en redes sociales, formularios, descargas y más</p>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-number">3</div>
+                                <div class="info-text">
+                                    <strong>Recibe mensajes aquí</strong>
+                                    <p>Todos los correos aparecerán automáticamente en tu bandeja</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <!-- Footer -->
+    <!-- Footer Global -->
     <footer class="global-footer">
         <div class="footer-container">
             <div class="footer-links">
@@ -295,7 +318,7 @@
         </div>
     </div>
 
-    <!-- Toast Container -->
+    <!-- Toast Notifications -->
     <div id="toastContainer" class="toast-container"></div>
 
     <script src="js/global.js"></script>
